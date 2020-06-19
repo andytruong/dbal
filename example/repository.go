@@ -27,3 +27,13 @@ func (this *Repository) Create(ctx context.Context, obj *User) error {
 
 	return err
 }
+
+func (this *Repository) Update(ctx context.Context) *UpdateBuilder {
+	return &UpdateBuilder{
+		context:    ctx,
+		repository: this,
+		where:      []string{},
+		args:       []interface{}{},
+		keys:       []string{},
+	}
+}

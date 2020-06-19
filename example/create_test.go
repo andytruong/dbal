@@ -44,7 +44,7 @@ func Test_Create(t *testing.T) {
 	ass.NoError(err)
 
 	{
-		obj, err := r.QueryBuilder(ctx).
+		obj, err := r.Select(ctx).
 			Where("id = ?", "john.doe").
 			GetOne()
 
