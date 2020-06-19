@@ -2,7 +2,6 @@ package example
 
 import (
 	"context"
-	"database/sql"
 	"testing"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -12,24 +11,30 @@ import (
 func Test(t *testing.T) {
 	ass := assert.New(t)
 	ctx := context.Background()
-	db, err := sql.Open("sqlite3", "db.sqlite3")
-	ass.NoError(err)
+	r := Mock_Repository()
+
 	id := "xxxxxxx"
 	name := "John Do"
 
+	// setup data for query
+	{
+		err := r.Create(ctx, &User{ID: id, Name: name})
+		ass.NoError(err)
+	}
+
 	t.Run("Where()", func(t *testing.T) {
-		b := QueryBuilder{}
+		b := r.QueryBuilder(ctx)
+
 		query := b.
 			Where("id = ? AND name = ?", id, name).
 			SQL()
 		ass.Equal("SELECT id, name FROM users WHERE (id = ? AND name = ?)", query)
 		ass.Equal(id, b.args[0])
 		ass.Equal(name, b.args[1])
-
 	})
 
 	t.Run("mutliple Where()", func(t *testing.T) {
-		b := QueryBuilder{}
+		b := r.QueryBuilder(ctx)
 
 		query := b.
 			Where("id = ?", id).
@@ -42,7 +47,7 @@ func Test(t *testing.T) {
 	})
 
 	t.Run("multiple Where() with different position", func(t *testing.T) {
-		b := QueryBuilder{}
+		b := r.QueryBuilder(ctx)
 
 		query := b.
 			Where("name = ?", name).
@@ -55,7 +60,7 @@ func Test(t *testing.T) {
 	})
 
 	t.Run("::Order()", func(t *testing.T) {
-		b := QueryBuilder{}
+		b := r.QueryBuilder(ctx)
 
 		query := b.
 			Where("name = ?", name).
@@ -69,7 +74,7 @@ func Test(t *testing.T) {
 	})
 
 	t.Run("::First()", func(t *testing.T) {
-		b := QueryBuilder{}
+		b := r.QueryBuilder(ctx)
 
 		query := b.
 			Where("name = ?", name).
@@ -83,8 +88,6 @@ func Test(t *testing.T) {
 	})
 
 	t.Run("GetOne()", func(t *testing.T) {
-		r := Repository{db: db}
-
 		obj, err := r.QueryBuilder(ctx).Where("id = ?", id).
 			Where("name = ?", name).GetOne()
 		ass.NoError(err)
@@ -93,8 +96,6 @@ func Test(t *testing.T) {
 	})
 
 	t.Run("GetMany()", func(t *testing.T) {
-		r := Repository{db: db}
-
 		list, err := r.QueryBuilder(ctx).Where("id = ?", id).
 			Where("name = ?", name).
 			Order("id DESC").
