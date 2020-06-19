@@ -12,6 +12,7 @@ func Test(t *testing.T) {
 	ass := assert.New(t)
 	ctx := context.Background()
 	r := Mock_Repository()
+	defer r.db.Close()
 
 	id := "xxxxxxx"
 	name := "John Do"
