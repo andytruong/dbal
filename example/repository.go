@@ -11,8 +11,8 @@ type (
 	}
 )
 
-func (this *Repository) QueryBuilder(ctx context.Context) *QueryBuilder {
-	return &QueryBuilder{
+func (this *Repository) Select(ctx context.Context) *SelectBuilder {
+	return &SelectBuilder{
 		context:    ctx,
 		repository: this,
 	}

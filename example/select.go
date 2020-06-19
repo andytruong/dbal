@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-type QueryBuilder struct {
+type SelectBuilder struct {
 	context    context.Context
 	repository *Repository
 
@@ -16,26 +16,26 @@ type QueryBuilder struct {
 	first int
 }
 
-func (this *QueryBuilder) First(first int) *QueryBuilder {
+func (this *SelectBuilder) First(first int) *SelectBuilder {
 	this.first = first
 
 	return this
 }
 
-func (this *QueryBuilder) Order(order string) *QueryBuilder {
+func (this *SelectBuilder) Order(order string) *SelectBuilder {
 	this.order = order
 
 	return this
 }
 
-func (this *QueryBuilder) Where(condition string, arguments ...interface{}) *QueryBuilder {
+func (this *SelectBuilder) Where(condition string, arguments ...interface{}) *SelectBuilder {
 	this.where = append(this.where, condition)
 	this.args = append(this.args, arguments...)
 
 	return this
 }
 
-func (this *QueryBuilder) GetOne() (*User, error) {
+func (this *SelectBuilder) GetOne() (*User, error) {
 	sql := this.First(1).SQL()
 
 	rows, err := this.repository.db.QueryContext(this.context, sql, this.args...)
@@ -54,7 +54,7 @@ func (this *QueryBuilder) GetOne() (*User, error) {
 	return obj, err
 }
 
-func (this *QueryBuilder) GetMany() ([]User, error) {
+func (this *SelectBuilder) GetMany() ([]User, error) {
 	sql := this.First(1).SQL()
 
 	rows, err := this.repository.db.QueryContext(this.context, sql, this.args...)
@@ -76,7 +76,7 @@ func (this *QueryBuilder) GetMany() ([]User, error) {
 	return list, err
 }
 
-func (this *QueryBuilder) SQL() string {
+func (this *SelectBuilder) SQL() string {
 	sql := "SELECT id, name FROM users WHERE "
 
 	if nil != this.where {

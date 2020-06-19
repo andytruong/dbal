@@ -23,7 +23,7 @@ func Test(t *testing.T) {
 	}
 
 	t.Run("Where()", func(t *testing.T) {
-		b := r.QueryBuilder(ctx)
+		b := r.Select(ctx)
 
 		query := b.
 			Where("id = ? AND name = ?", id, name).
@@ -34,7 +34,7 @@ func Test(t *testing.T) {
 	})
 
 	t.Run("mutliple Where()", func(t *testing.T) {
-		b := r.QueryBuilder(ctx)
+		b := r.Select(ctx)
 
 		query := b.
 			Where("id = ?", id).
@@ -47,7 +47,7 @@ func Test(t *testing.T) {
 	})
 
 	t.Run("multiple Where() with different position", func(t *testing.T) {
-		b := r.QueryBuilder(ctx)
+		b := r.Select(ctx)
 
 		query := b.
 			Where("name = ?", name).
@@ -60,7 +60,7 @@ func Test(t *testing.T) {
 	})
 
 	t.Run("::Order()", func(t *testing.T) {
-		b := r.QueryBuilder(ctx)
+		b := r.Select(ctx)
 
 		query := b.
 			Where("name = ?", name).
@@ -74,7 +74,7 @@ func Test(t *testing.T) {
 	})
 
 	t.Run("::First()", func(t *testing.T) {
-		b := r.QueryBuilder(ctx)
+		b := r.Select(ctx)
 
 		query := b.
 			Where("name = ?", name).
@@ -88,7 +88,7 @@ func Test(t *testing.T) {
 	})
 
 	t.Run("GetOne()", func(t *testing.T) {
-		obj, err := r.QueryBuilder(ctx).Where("id = ?", id).
+		obj, err := r.Select(ctx).Where("id = ?", id).
 			Where("name = ?", name).GetOne()
 		ass.NoError(err)
 		ass.Equal(id, obj.ID)
@@ -96,7 +96,7 @@ func Test(t *testing.T) {
 	})
 
 	t.Run("GetMany()", func(t *testing.T) {
-		list, err := r.QueryBuilder(ctx).Where("id = ?", id).
+		list, err := r.Select(ctx).Where("id = ?", id).
 			Where("name = ?", name).
 			Order("id DESC").
 			GetMany()
