@@ -17,3 +17,13 @@ func (this *Repository) QueryBuilder(ctx context.Context) *QueryBuilder {
 		repository: this,
 	}
 }
+
+func (this *Repository) Create(ctx context.Context, obj *User) error {
+	_, err := this.db.ExecContext(
+		ctx,
+		"INSERT INTO users (id, name) VALUES (?, ?)",
+		obj.ID, obj.Name,
+	)
+
+	return err
+}

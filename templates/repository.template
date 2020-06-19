@@ -17,3 +17,13 @@ func (this *Repository) QueryBuilder(ctx context.Context) *QueryBuilder {
 		repository: this,
 	}
 }
+
+func (this *Repository) Create(ctx context.Context, obj *{{ Entity }}) error {
+	_, err := this.db.ExecContext(
+		ctx,
+		"INSERT INTO {{ Table }} ({{ columns }}) VALUES ({{ placeholders }})",
+		{{ properties }},
+	)
+
+	return err
+}
