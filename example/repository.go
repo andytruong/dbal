@@ -35,5 +35,6 @@ func (this *Repository) Update(ctx context.Context) *UpdateBuilder {
 		where:      []string{},
 		args:       []interface{}{},
 		keys:       []string{},
+		values:     []interface{}{},
 	}
 }
